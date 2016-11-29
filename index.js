@@ -38,7 +38,7 @@ const save = (body, {host}, protocol) => {
 	UriToToken.set(url, token)
 	TokenToUri.set(token, url)
 
-	return `<input type="text" onclick="this.select();" value="${protocol}://${host}/${UriToToken.get(url)}" readyonly/>`
+	return `<input type="text" onclick="this.select();" value="${protocol}://${host}/${UriToToken.get(url)}" readonly />`
 }
 
 const app = route.define([
