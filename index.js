@@ -31,14 +31,14 @@ const save = (body, {host}, protocol) => {
 	if (UriToToken.has(url))
 		return `${protocol}://${host}/${UriToToken.get(url)}`
 
-	let token = randomBytes(4).toString('hex')     // 16^4
+	let token = randomBytes(4).toString('hex')
 	while (TokenToUri.has(token))                  // don't map two urls to the same token
 		token = randomBytes(4).toString('hex')
 
 	UriToToken.set(url, token)
 	TokenToUri.set(token, url)
 
-	return `${protocol}://${host}/${UriToToken.get(url)}`
+	return `<input type="text" onclick="this.select();" value="${protocol}://${host}/${UriToToken.get(url)}" />`
 }
 
 const app = route.define([
