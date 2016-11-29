@@ -1,0 +1,29 @@
+{
+  "name": "url-shortener",
+  "version": "1.0.0",
+  "description": "A simple URL shortener written in Node.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fvj/url-shortener.git"
+  },
+  "keywords": [
+    "url",
+    "shorten",
+    "shortener"
+  ],
+  "author": "fvj",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fvj/url-shortener/issues"
+  },
+  "homepage": "https://github.com/fvj/url-shortener#readme",
+  "dependencies": {
+    "spirit": "^0.4.0",
+    "spirit-body": "0.0.3",
+    "spirit-router": "^0.4.0"
+  }
+}
