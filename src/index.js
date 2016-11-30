@@ -4,9 +4,9 @@ const {adapter, redirect} = require('spirit').node
 const {randomBytes} = require('crypto')
 const {default: body} = require('spirit-body')
 const {parse: parseString} = require('querystring')
+const {default: BiMap} = require('./bimap')
 
-const UriToToken = new Map()
-const TokenToUri = new Map()  // performance hack. :(
+const mapping = new BiMap()
 const notFound = {
 	status: 404,
 	body: 'Not Found',
@@ -20,25 +20,24 @@ const index = `
 	</form>`.trim().replace(/\t/g, '')
 
 const lookup = (url) => {
-	if (TokenToUri.has(url))
-		return redirect(TokenToUri.get(url))
+	if (mapping.has(url))
+		return redirect(mapping.get(url))
 	return notFound
 }
 
 const save = (body, {host}, protocol) => {
 	const {url} = parseString(body)
 
-	if (UriToToken.has(url))
-		return `${protocol}://${host}/${UriToToken.get(url)}`
+	if (mapping.has(url))
+		return `<input type="text" onclick="this.select();" value="${protocol}://${host}/${mapping.get(url)} readyonly />`
 
 	let token = randomBytes(4).toString('hex')
-	while (TokenToUri.has(token))                  // don't map two urls to the same token
+	while (mapping.has(token))                  // don't map two urls to the same token
 		token = randomBytes(4).toString('hex')
 
-	UriToToken.set(url, token)
-	TokenToUri.set(token, url)
+	mapping.set(url, token)
 
-	return `<input type="text" onclick="this.select();" value="${protocol}://${host}/${UriToToken.get(url)}" readonly />`
+	return `<input type="text" onclick="this.select();" value="${protocol}://${host}/${mapping.get(url)}" readonly />`
 }
 
 const app = route.define([
