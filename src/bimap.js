@@ -1,8 +1,10 @@
+const {writeFileSync, readFileSync} = require('fs')
+
 export default class BiMap {
 	constructor(keys, values) {
 		this.mapL = new Map()
 		this.mapR = new Map()
-		if (keys === undefined || values === undefined || keys.length !== values.length)
+		if (!keys || !values || keys.length !== values.length)
 		  return
 		keys.forEach((key, index) => {
 			this.mapL.set(key, values[index])
@@ -40,5 +42,13 @@ export default class BiMap {
 			this.mapR.set(values[index], key)
 		})
 		return this
+	}
+
+	dumpToFile(path) {
+		writeFileSync(path, JSON.stringify(this.dump()))
+	}
+
+	importFromFile(path) {
+		return this.import(JSON.parse(readFileSync(path)))
 	}
 }

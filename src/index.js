@@ -5,8 +5,8 @@ const {randomBytes} = require('crypto')
 const {default: body} = require('spirit-body')
 const {parse: parseString} = require('querystring')
 const {default: BiMap} = require('./bimap')
+const {existsSync: fileExists} = require('fs')
 
-const mapping = new BiMap()
 const notFound = {
 	status: 404,
 	body: 'Not Found',
@@ -40,11 +40,31 @@ const save = (body, {host}, protocol) => {
 	return `<input type="text" onclick="this.select();" value="${protocol}://${host}/${mapping.get(url)}" readonly />`
 }
 
-const app = route.define([
-	route.get('/', index),
-	route.wrap(route.post('/', ['body', 'headers', 'protocol'], save), [body]),
-	route.get('/:url', ['url'], lookup),
-	route.any('*', notFound)
-])
+const constructApp = (path) => {
+	if (!fileExists(path))
+		(new BiMap()).dumpToFile(path)
+	mapping = new BiMap().importFromFile(path)
+	return route.define([
+		route.get('/', index),
+		route.wrap(route.post('/', ['body', 'headers', 'protocol'], save), [body]),
+		route.get('/:url', ['url'], lookup),
+		route.any('*', notFound)
+	])
+}
 
-http.createServer(adapter(app)).listen(3000)
+const databasePath = './database.json'
+const port = 3000
+let mapping = undefined
+const app = constructApp(databasePath)
+
+http.createServer(adapter(app)).listen(port, () => {
+	console.log(`Running server on port ${port}, database path: ${databasePath}`)
+	console.log(mapping)
+})
+
+process.on('SIGINT', () => {
+	console.log(`Caught SIGINT. Dumping database to ${databasePath}`)
+	mapping.dumpToFile(databasePath)
+	console.log(`Dump complete. Godspeed.`)
+	process.exit(1)
+})
