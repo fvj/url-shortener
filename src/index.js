@@ -59,7 +59,6 @@ const app = constructApp(databasePath)
 
 http.createServer(adapter(app)).listen(port, () => {
 	console.log(`Running server on port ${port}, database path: ${databasePath}`)
-	console.log(mapping)
 })
 
 process.on('SIGINT', () => {
