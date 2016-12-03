@@ -4,7 +4,7 @@ const {adapter, redirect} = require('spirit').node
 const {randomBytes} = require('crypto')
 const {default: body} = require('spirit-body')
 const {parse: parseString} = require('querystring')
-const {default: BiMap} = require('./bimap')
+const {default: SimpleBiMap} = require('./sbimap')
 const {existsSync: fileExists} = require('fs')
 
 const notFound = {
@@ -42,8 +42,8 @@ const save = (body, {host}, protocol) => {
 
 const constructApp = (path) => {
 	if (!fileExists(path))
-		(new BiMap()).dumpToFile(path)
-	mapping = new BiMap().importFromFile(path)
+		(new SimpleBiMap()).dumpToFile(path)
+	mapping = new SimpleBiMap().importFromFile(path)
 	return route.define([
 		route.get('/', index),
 		route.wrap(route.post('/', ['body', 'headers', 'protocol'], save), [body]),
