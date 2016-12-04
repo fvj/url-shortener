@@ -29,15 +29,17 @@ const save = (body, {host}, protocol) => {
 	const {url} = parseString(body)
 
 	if (mapping.has(url))
-		return `<input type="text" onclick="this.select();" value="${protocol}://${host}/${mapping.get(url)} readyonly />`
+		return `<input type="text" onclick="this.select();"
+			 value="${protocol}://${host}/${mapping.get(url)} readyonly />`
 
 	let token = randomBytes(4).toString('hex')
-	while (mapping.has(token))                  // don't map two urls to the same token
+	while (mapping.has(token))
 		token = randomBytes(4).toString('hex')
 
 	mapping.set(url, token)
 
-	return `<input type="text" onclick="this.select();" value="${protocol}://${host}/${mapping.get(url)}" readonly />`
+	return `<input type="text" onclick="this.select();"
+		value="${protocol}://${host}/${mapping.get(url)}" readonly />`
 }
 
 const constructApp = (path) => {
