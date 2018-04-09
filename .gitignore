@@ -41,3 +41,5 @@ Thumbs.db
 npm-debug.log
 
 build
+
+.env
